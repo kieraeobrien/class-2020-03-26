@@ -21,14 +21,67 @@ train <- train %>%
 
 **Prompt:**  First, calculate three things for both the treated and the controls: the average `att_start`, `att_end` and `att_chg`.  Do those numbers make sense? Presumably, there is a mathematical relationship among them that you can check. (Recall that, for each person, `att_end` minus `att_start` should equal `att_chg`.) Second (in a new code chunk), and just as we did with income, calculate the difference in means between  treated and the controls for only `att_chg`. (You will want to get those values on the same row, so that subtraction can be done.) Does the difference seem "large?" Do the numbers seems sensible?  Provide an hypothesis as to why the average `att_chg` is not zero in both groups.
 
+``` {r scene 8, include = F}
+
+average_start <- train %>%
+  summarize(average = mean(att_start))
+
+average_end <- train %>%
+  summarize (average = mean(att_end))
+
+average_change <- train %>% 
+  summarize (average = mean(att_chg))
+```
+
+``` {r scene 8 part two, include = F}
+
+# treated
+
+treated <- train %>%
+  filter(treatment == "Treated") %>%
+  summarize(average = mean(att_chg))
+
+control <- train %>%
+  filter(treatment == "Control") %>%
+  summarize(average = mean(att_chg))
+
+diff <- treated - control 
+```
+
 # Scene 9
 
 **Prompt:** What is the 99% confidence interval for the difference in means between the treated and the controls? Provide a Bayesian and Frequentist definition of that interval. Write them down in your Rmd! Are these results consistent with what Enos finds? Check out the paper and see! Why am I using a 99% confidence interval here? Why not 99.5% or 97%?
 
+``` {r scene 9, include = F}
+
+# Frequentist - sample an infinite number of times (hypothetical repetition/objective?)
+
+# Bayesian - probability only based on the information you have (subjective/prior belief)
+
+train %>%
+  select(att_chg) %>%
+  rep_sample_n(size = 115,reps = 1000,replace = TRUE)
+
+lower_prob = quantile(g_samples, (1-0.99/2))
+
+upper_prob = quantile(g_samples, level + (1-level)/2)
+
+treat_cong <- diff %>%
+  pull(average) %>%
+  quantile(c(((1-0.99)/2), ().99 + (1-0.99)/2))
+
+
+control_conf <- diff %>%
+  pull(average) %>%
+  quantile(c(((1-0.99)/2), ().99 + (1-0.99)/2))
+```
 
 # Scene 10
 
 **Prompt:** Use the language of the Rubin Causal Model and potential outcomes to describe this experiment. What are the units? What are the treatments? What are the outcomes? What is the *causal effect* we want to measure for each unit? Remind us what the *fundamental problem of causal inference* is. Write all this down in a paragraph you construct together. As always, each student needs their own paragraph. Preceptor still has `.my_cold_call()` . . .
+
+
+
 
 # Scene 11
 
