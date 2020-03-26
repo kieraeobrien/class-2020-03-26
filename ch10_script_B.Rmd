@@ -58,10 +58,6 @@ diff <- treated - control
 
 # Bayesian - probability only based on the information you have (subjective/prior belief)
 
-train %>%
-  select(att_chg) %>%
-  rep_sample_n(size = 115,reps = 1000,replace = TRUE)
-
 lower_prob = quantile(g_samples, (1-0.99/2))
 
 upper_prob = quantile(g_samples, level + (1-level)/2)
@@ -74,14 +70,30 @@ treat_cong <- diff %>%
 control_conf <- diff %>%
   pull(average) %>%
   quantile(c(((1-0.99)/2), ().99 + (1-0.99)/2))
+
+train %>%
+  select(att_chg) %>%
+  rep_sample_n(size = nrow(.), reps = 1000, replace = TRUE) %>%
+  group_by(replicate, treatment) %>%
+  summarize(avg_att_chg = mean(att_chg)) %>%
+  pivot_wider(id_cols = replicat, names_from = treatment, values_from = avg_att_chg) %>%
+  mutate(avg_chg_diff = Treated - Control) %>%
+  ungroup() %>%
+  summarize(
+    lower = quantile(att_chg_diff = c(0.005)), 
+    median = quantile(att_chg_diff = c(0.5)), 
+    upper = quantile(att_chg_diff = c(0.995))
+  )
+    
 ```
 
 # Scene 10
 
 **Prompt:** Use the language of the Rubin Causal Model and potential outcomes to describe this experiment. What are the units? What are the treatments? What are the outcomes? What is the *causal effect* we want to measure for each unit? Remind us what the *fundamental problem of causal inference* is. Write all this down in a paragraph you construct together. As always, each student needs their own paragraph. Preceptor still has `.my_cold_call()` . . .
 
+``` {r}
 
-
+```
 
 # Scene 11
 
